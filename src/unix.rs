@@ -11,7 +11,7 @@ use std::{
 // This will probably take a few iterations to get right. The idea: always use
 // an openat64, and import the right variant for the platform. See File::open_c in [`std::sys::unix::fs`].
 cfg_if::cfg_if! {
-    if #[cfg(any(target_os="macos", target_os="freebsd", target_os="ios", target_os="netbsd", target_os="illumos"))] {
+    if #[cfg(any(target_os="macos", target_os="freebsd", target_os="ios", target_os="netbsd", target_os="illumos", target_os="solaris"))] {
         use libc::openat as openat64;
     } else {
         use libc::openat64;
@@ -128,7 +128,7 @@ impl OpenOptionsImpl {
         self._open_at(d, path, flags)
     }
 
-    #[cfg(all(not(target_os = "macos"), not(target_os = "netbsd")))]
+    #[cfg(all(not(target_os = "macos"), not(target_os = "netbsd"), not(target_os = "solaris")))]
     pub fn open_path_at(&self, d: &File, path: &Path) -> Result<File> {
         let flags =
             libc::O_RDONLY | libc::O_NOFOLLOW | libc::O_PATH | libc::O_CLOEXEC | libc::O_NOCTTY;

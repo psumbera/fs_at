@@ -325,7 +325,7 @@ impl OpenOptions {
     /// restricted.
     ///
     /// MacOSX and NetBSD: Not implemented as O_PATH is not defined.
-    #[cfg(all(not(target_os = "macos"), not(target_os = "netbsd")))]
+    #[cfg(all(not(target_os = "macos"), not(target_os = "netbsd"), not(target_os = "solaris")))]
     pub fn open_path_at<P: AsRef<Path>>(&self, d: &File, p: P) -> Result<File> {
         self._impl
             .open_path_at(d, OpenOptions::ensure_rootless(p.as_ref())?)
